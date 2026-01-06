@@ -1,4 +1,5 @@
-IMAGE := telosalliance/ubuntu-24.04
+#IMAGE := telosalliance/ubuntu-24.04
+IMAGE := telosalliance/ubuntu-24.04_cdr
 TAG   ?= $(shell date +%Y-%m-%d)
 
 .PHONY: all image lint run push
@@ -6,7 +7,7 @@ TAG   ?= $(shell date +%Y-%m-%d)
 all: image
 
 image:
-	docker buildx build --platform linux/amd64,linux/arm64 -t $(IMAGE):latest -t $(IMAGE):$(TAG) --push .
+	docker buildx build --platform linux/amd64 -t $(IMAGE):latest -t $(IMAGE):$(TAG) .
 #	DOCKER_BUILDKIT=1 docker build $(ARGS) -t $(IMAGE):$(TAG) .
 #	DOCKER_BUILDKIT=1 docker build $(ARGS) -t $(IMAGE):latest .
 
@@ -24,5 +25,6 @@ run:
 		--env LINUX_UID=$(shell id -u) \
 		--env LINUX_GROUP=$(shell id -gn) \
 		--env LINUX_GID=$(shell id -g) \
+		--detach-keys="ctrl-@" \
 		--mount src=$(HOME),target=$(HOME),type=bind \
 		-ti --rm $(IMAGE):$(TAG)
