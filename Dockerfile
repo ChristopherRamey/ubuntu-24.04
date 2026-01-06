@@ -263,6 +263,82 @@ rm -rf /var/lib/apt/lists/* /tmp/arch_vars.sh
 
 EOF
 
+
+# from mxl .devcontainer/Dockerfile
+
+COPY ./scripts/ /tmp/scripts
+
+# Install basic and runtime dependencies
+RUN apt clean all && apt-get update \
+ && apt-get install -y --no-install-recommends \
+    wget \
+    curl \
+    zip \
+    unzip \
+    tar \
+    lsb-release \
+    apt-transport-https \
+    ca-certificates \
+    software-properties-common \
+    git \
+    git-lfs \
+    openssh-client \
+    pkg-config \
+    build-essential \
+    gdb \
+    nasm \
+    doxygen \
+    graphviz \
+    autoconf \
+    automake \
+    libtool \
+    pkg-config \
+    bison \
+    flex \
+    htop \
+    ccache \
+    rustup \
+    librdmacm-dev
+
+
+ARG CLANG_VERSION=19
+RUN apt-get install -y --no-install-recommends \
+    "clang-${CLANG_VERSION}" \
+    "clang-tools-${CLANG_VERSION}" \
+    "clang-tidy-${CLANG_VERSION}" \
+    "clang-format-${CLANG_VERSION}" \
+    "llvm-${CLANG_VERSION}" \
+    cmake \
+    ninja-build
+
+# Make the selected clang version the default alternative
+RUN /tmp/scripts/debian/register-clang-version.sh "${CLANG_VERSION}" 100 
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgstreamer1.0-dev \
+    libgstreamer-plugins-base1.0-dev \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-plugins-ugly \
+    gstreamer1.0-x 
+
+RUN apt-get remove -y libfabric1
+
+RUN /tmp/scripts/common/libfabric/install.sh
+
+# Install vcpkg
+RUN git clone https://github.com/microsoft/vcpkg \
+ && ./vcpkg/bootstrap-vcpkg.sh --disableMetrics
+
+ENV VCPKG_ROOT="/home/${USERNAME}/vcpkg"
+
+#COPY ./scripts/ /tmp/scripts/
+#RUN /tmp/scripts/common/rust/install-rust.sh
+
+# end mxl .devcontainer/Dockerfile
+
+
+
 COPY patch /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["/bin/bash"]
