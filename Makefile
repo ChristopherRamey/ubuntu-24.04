@@ -1,5 +1,5 @@
 #IMAGE := telosalliance/ubuntu-24.04
-IMAGE := telosalliance/ubuntu-24.04_cdr
+IMAGE := telosalliance/ubuntu-24.04_nga
 TAG   ?= $(shell date +%Y-%m-%d)
 
 .PHONY: all image lint run push

@@ -99,15 +99,15 @@ apt-get install -y --no-install-recommends \
   wget
 
 # Install AWS CLI with better error handling
-echo "Installing AWS CLI for \$AWS_ARCH..."
-AWS_CLI_URL="https://awscli.amazonaws.com/awscli-exe-linux-\${AWS_ARCH}.zip"
-if curl -f "\$AWS_CLI_URL" -o "awscliv2.zip"; then
-  unzip awscliv2.zip
-  ./aws/install
-  rm -rf awscliv2.zip aws
-else
-  echo "Warning: AWS CLI not available for architecture \$AWS_ARCH, skipping..."
-fi
+# echo "Installing AWS CLI for \$AWS_ARCH..."
+# AWS_CLI_URL="https://awscli.amazonaws.com/awscli-exe-linux-\${AWS_ARCH}.zip"
+# if curl -f "\$AWS_CLI_URL" -o "awscliv2.zip"; then
+#   unzip awscliv2.zip
+#   ./aws/install
+#   rm -rf awscliv2.zip aws
+# else
+#   echo "Warning: AWS CLI not available for architecture \$AWS_ARCH, skipping..."
+# fi
 
 # Use kitware's CMake repository for up-to-date version
 curl -sSfL https://apt.kitware.com/keys/kitware-archive-latest.asc | gpg --dearmor -o /usr/share/keyrings/kitware-keyring.gpg
@@ -136,29 +136,29 @@ else
 fi
 
 # Install Rust prereqs
-apt-get install -y --no-install-recommends musl-tools
+#apt-get install -y --no-install-recommends musl-tools
 
 # Install Rust and Rust tools
-curl -sSfL https://sh.rustup.rs | sh -s -- -y
-source \$RUST_HOME/env
-curl -sSfL https://just.systems/install.sh | bash -s -- --to "\$RUST_HOME/bin"
+#curl -sSfL https://sh.rustup.rs | sh -s -- -y
+#source \$RUST_HOME/env
+#curl -sSfL https://just.systems/install.sh | bash -s -- --to "\$RUST_HOME/bin"
 
 # Install Rust tools
-cargo install cargo-about
-cargo install cargo-bundle-licenses
-cargo install cargo-deny
-cargo install cargo-license
-cargo install cargo-lichking
-cargo install cargo-deb
-cargo install cargo-generate-rpm
+#cargo install cargo-about
+#cargo install cargo-bundle-licenses
+#cargo install cargo-deny
+#cargo install cargo-license
+#cargo install cargo-lichking
+#cargo install cargo-deb
+#cargo install cargo-generate-rpm
 
 # Add Rust target
-echo "Adding Rust target: \$RUST_TARGET"
-rustup target add "\$RUST_TARGET"
+#echo "Adding Rust target: \$RUST_TARGET"
+#rustup target add "\$RUST_TARGET"
 
 # Clean up Rust cache
-rm -rf "\$RUST_HOME/registry" "\$RUST_HOME/git"
-chmod 777 "\$RUST_HOME"
+#rm -rf "\$RUST_HOME/registry" "\$RUST_HOME/git"
+#chmod 777 "\$RUST_HOME"
 
 # Create go directory
 mkdir -p "\$GO_HOME"
@@ -243,6 +243,9 @@ apt-get install -y \
   sbsigntool \
   uuid-runtime
 
+apt-get install -y icu-devtools libicu-dev
+apt-get install -y libcpprest-dev libcpprest2.10
+
 # Install architecture-specific libc6-dev packages
 echo "Installing \$LIBC_DEV_PACKAGE for cross-compilation..."
 if apt-cache show "\$LIBC_DEV_PACKAGE" >/dev/null 2>&1; then
@@ -258,8 +261,8 @@ if [ "\$TARGETARCH" = "arm64" ]; then
 fi
 
 # Clean up
-apt-get clean
-rm -rf /var/lib/apt/lists/* /tmp/arch_vars.sh
+#apt-get clean
+#rm -rf /var/lib/apt/lists/* /tmp/arch_vars.sh
 
 EOF
 
